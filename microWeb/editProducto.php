@@ -1,41 +1,51 @@
 <?php
-// Recupera los datos del formulario de edición
-$usuario = $_POST["editUsuarioId"];
-$nuevoNombre = $_POST["editNombre"];
-$nuevoEmail = $_POST["editEmail"];
-$nuevoUsuario = $_POST["editUsuario"];
-$nuevaPassword = $_POST["editPassword"];
-$nuevoRol = $_POST["editRol"];
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Verificar si se recibieron los datos necesarios
+    if (isset($_POST["productId"]) && isset($_POST["newStock"])) {
+        // Obtener el ID del producto y el nuevo inventario desde el formulario
+        $productId = $_POST["productId"];
+        $newStock = $_POST["newStock"];
+        
+        // Construir el JSON con el nuevo inventario
+        $data = json_encode(array("inventario" => $newStock));
+        
+        // URL de la API para actualizar el producto
+        $url = "http://microProductos:3002/productos/" . $productId;
+        
+        // Inicializar cURL para enviar la solicitud PUT
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Content-Type: application/json",
+            "Content-Length: " . strlen($data)
+        ));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        // Realizar la solicitud PUT
+        $response = curl_exec($ch);
+        
+        if ($response === false) {
+            echo "Error en la conexión: " . curl_error($ch);
+            header("Location:index.html");
+            exit;
+        } else {
+            // La solicitud fue exitosa, puedes procesar la respuesta si es necesario
+            echo "Inventario actualizado exitosamente.";
+            session_start();
+            $_SESSION["mensaje_exito"] = "El inventario ha sido actualizado. ✅";
+            header("Location:admin-prod.php");
+            exit;
 
-// Prepara los datos para enviar al servidor
-$datosUsuario = json_encode(array(
-    "nombre" => $nuevoNombre,
-    "email" => $nuevoEmail,
-    "usuario" => $nuevoUsuario,
-    "password" => $nuevaPassword,
-    "rol" => $nuevoRol
-));
-
-// Configura la solicitud HTTP
-$url = "http://microUsuarios:3001/usuarios/" . $usuario;
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-curl_setopt($ch, CURLOPT_POSTFIELDS, $datosUsuario);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-// Ejecuta la solicitud
-$response = curl_exec($ch);
-
-// Verifica si la solicitud fue exitosa
-if ($response === false) {
-    die("Error en la conexión");
+        }
+        
+        // Cerrar la conexión cURL
+        curl_close($ch);
+    } else {
+        echo "Faltan datos necesarios para la actualización.";
+    }
+} else {
+    echo "Método de solicitud incorrecto. Debe ser una solicitud POST.";
 }
-
-// Cierra la conexión
-curl_close($ch);
-session_start();
-$_SESSION["mensaje_exito"] = "El usuario ha sido actualizado. ✅";
-// Redirige de vuelta a la página de administración de usuarios
-header("Location: admin.php");
 ?>
+
