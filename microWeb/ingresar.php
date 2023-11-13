@@ -6,7 +6,6 @@ ini_set('display_errors', 1);
 $user = $_POST["usuario"];
 $pass = $_POST["password"];
 
-echo " info" , $user, $pass;
 // Construir la URL para la solicitud al servicio web
 $servurl = "http://microUsuarios:3001/usuarios/$user/$pass";
 
@@ -42,11 +41,15 @@ if (json_last_error() === JSON_ERROR_NONE) {
     // Redirigir según el rol del usuario
     if ($rol === "Vendedor") {
         header("Location: admin.php");
+        exit; // Termina el script después de la redirección
     } elseif ($rol === "Cliente") {
         header("Location: usuario.php");
+        exit; // Termina el script después de la redirección
     }
 
 } else {
     // Error de decodificación JSON, redirigir a otra página
     header("Location: index.html");
+    exit; // Termina el script después de la redirección
 }
+?>
