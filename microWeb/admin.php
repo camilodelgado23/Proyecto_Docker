@@ -1,3 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION["usuario"])) {
+    header("Location: index.html");
+    exit;
+}
+$usuario = $_SESSION["usuario"];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,13 +53,6 @@
     </style>
 </head>
 <body>
-    <?php
-        session_start();
-        if (!isset($_SESSION["usuario"])) {
-            header("Location: index.html");
-        }
-        $usuario = $_SESSION["usuario"];
-    ?>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="admin.php">Almacen ABC</a>
