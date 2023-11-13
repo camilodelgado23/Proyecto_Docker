@@ -6,7 +6,7 @@
     $rol=$_POST["rol"];
 
     // URL de la solicitud POST
-    $url = 'http://microUsuarios:3001/microUsuarios';
+    $url = 'http://microUsuarios:3001/usuarios';
 
     // Datos que se enviarán en la solicitud POST
     $data = array(
