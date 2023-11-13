@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    $us = $_SESSION["usuario"];
+    if ($us == "") {
+        header("Location: index.html");
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,13 +52,6 @@
     </style>
 </head>
 <body>
-    <?php
-        session_start();
-        $us = $_SESSION["usuario"];
-        if ($us == "") {
-            header("Location: index.html");
-        }
-    ?>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="admin.php">Almacen ABC</a>
