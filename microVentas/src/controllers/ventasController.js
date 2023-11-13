@@ -31,14 +31,14 @@ router.post('/ventas', async (req, res) => {
         return res.json({ error: 'Invalid order total' });
     }
 
-    const responseUsuario = await axios.get(`http://localhost:3001/usuarios/${usuario}`);
+    const responseUsuario = await axios.get(`http://192.168.100.2:3001/usuarios/${usuario}`);
     const nombreCliente = responseUsuario.data.nombre;
     const emailCliente = responseUsuario.data.email;
 
     const productosVendidos = [];
     
     for (const producto of items) {
-        const responseProducto = await axios.get(`http://localhost:3002/productos/${producto.id}`);
+        const responseProducto = await axios.get(`http://192.168.100.2:3002/productos/${producto.id}`);
         const nombreProducto = responseProducto.data.nombre;
         const precioProducto = responseProducto.data.precio;
 
@@ -66,7 +66,7 @@ router.post('/ventas', async (req, res) => {
 async function calcularTotal(items) {
     let ventaTotal = 0;
     for (const producto of items) {
-        const response = await axios.get(`http://localhost:3002/productos/${producto.id}`);
+        const response = await axios.get(`http://192.168.100.2:3002/productos/${producto.id}`);
         ventaTotal += response.data.precio * producto.cantidad;
     }
     return ventaTotal;
@@ -76,7 +76,7 @@ async function calcularTotal(items) {
 async function verificarDisponibilidad(items) {
     let disponibilidad = true;
     for (const producto of items) {
-        const response = await axios.get(`http://localhost:3002/productos/${producto.id}`);
+        const response = await axios.get(`http://192.168.100.2:3002/productos/${producto.id}`);
         if (response.data.inventario < producto.cantidad) {
             disponibilidad = false;
             break;
@@ -88,7 +88,7 @@ async function verificarDisponibilidad(items) {
 // Función para disminuir la cantidad de unidades de los productos
 async function actualizarInventario(items) {
     for (const producto of items) {
-        const response = await axios.get(`http://localhost:3002/productos/${producto.id}`);
+        const response = await axios.get(`http://192.168.100.2:3002/productos/${producto.id}`);
         const inventarioActual = response.data.inventario;
         const inv = inventarioActual - producto.cantidad;
         await axios.put(`http://localhost:3002/productos/${producto.id}`, {
