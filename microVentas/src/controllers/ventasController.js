@@ -91,7 +91,7 @@ async function actualizarInventario(items) {
         const response = await axios.get(`http://192.168.100.2:3002/productos/${producto.id}`);
         const inventarioActual = response.data.inventario;
         const inv = inventarioActual - producto.cantidad;
-        await axios.put(`http://localhost:3002/productos/${producto.id}`, {
+        await axios.put(`http://192.168.100.2:3002/productos/${producto.id}`, {
             inventario: inv
         });
     }
